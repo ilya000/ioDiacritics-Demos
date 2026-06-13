@@ -1,0 +1,11 @@
+# Build artifacts (any subfolder)
+.build/
+build/
+dist/
+.build_number
+
+# Editor / OS cruft
+.DS_Store
+*.o
+*.a
+*.xcodeproj
