@@ -7,27 +7,32 @@ import ioDiacriticsSerbian
 /// The languages the demo offers, plus an Auto mode that detects which BCS variety the
 /// text is written in. Each concrete case maps to one `ioDiacritics` language pack.
 enum DemoLanguage: String, CaseIterable, Identifiable {
-    case auto, bosnian, croatian, serbian
+    case auto, bosnian, croatian, serbian, serbianCyrillic
 
     var id: String { rawValue }
 
     /// Short label for the dropdown.
     var menuLabel: String {
         switch self {
-        case .auto:     return "Auto-detect"
-        case .bosnian:  return "Bosnian"
-        case .croatian: return "Croatian"
-        case .serbian:  return "Serbian"
+        case .auto:            return "Auto-detect"
+        case .bosnian:         return "Bosnian"
+        case .croatian:        return "Croatian"
+        case .serbian:         return "Serbian (Latin)"
+        case .serbianCyrillic: return "Serbian (Cyrillic)"
         }
     }
+
+    /// After restoring with the Serbian pack, transliterate the Latin result to Serbian Cyrillic.
+    var transliterateToCyrillic: Bool { self == .serbianCyrillic }
 
     /// Display name straight from the library's reliability passport (e.g. "Српски / Serbian").
     var passportName: String? {
         switch self {
-        case .auto:     return nil
-        case .bosnian:  return Bosnian.stats.language
-        case .croatian: return Croatian.stats.language
-        case .serbian:  return Serbian.stats.language
+        case .auto:            return nil
+        case .bosnian:         return Bosnian.stats.language
+        case .croatian:        return Croatian.stats.language
+        case .serbian:         return Serbian.stats.language
+        case .serbianCyrillic: return "Српски ћирилица / Serbian Cyrillic"
         }
     }
 
@@ -40,20 +45,20 @@ enum DemoLanguage: String, CaseIterable, Identifiable {
     /// quality over memory, so it builds its own restorers instead of reusing the shared ones.
     var restorer: Restorer? {
         switch self {
-        case .auto:     return nil
-        case .bosnian:  return DemoPacks.bosnian
-        case .croatian: return DemoPacks.croatian
-        case .serbian:  return DemoPacks.serbian
+        case .auto:            return nil
+        case .bosnian:         return DemoPacks.bosnian
+        case .croatian:        return DemoPacks.croatian
+        case .serbian, .serbianCyrillic: return DemoPacks.serbian
         }
     }
 
     /// One-line reliability summary for the footer / About surface.
     var statsSummary: String? {
         switch self {
-        case .auto:     return nil
-        case .bosnian:  return Bosnian.stats.summary
-        case .croatian: return Croatian.stats.summary
-        case .serbian:  return Serbian.stats.summary
+        case .auto:            return nil
+        case .bosnian:         return Bosnian.stats.summary
+        case .croatian:        return Croatian.stats.summary
+        case .serbian, .serbianCyrillic: return Serbian.stats.summary
         }
     }
 
@@ -113,9 +118,19 @@ enum DemoEngine {
             return Outcome(restored: text, usedLanguage: resolved, ambiguous: ambiguous,
                            segments: text.isEmpty ? [] : [Segment(text: text, changed: false)], changedWords: 0)
         }
-        let restored = restorer.restorePreparedText(text)
-        let segments = diff(original: text, restored: restored)
+        // Restore diacritics in Latin, and diff against the (Latin) input so "fixed" highlighting
+        // reflects the diacritic edits — the real value — not the script change.
+        let restoredLatin = restorer.restorePreparedText(text)
+        var segments = diff(original: text, restored: restoredLatin)
         let changed = segments.reduce(0) { $0 + ($1.changed ? 1 : 0) }
+
+        var restored = restoredLatin
+        if resolved.transliterateToCyrillic {
+            // Per-run transliteration == whole-string (digraphs lj/nj/dž never cross a run
+            // boundary, since a word is a single run), so the changed flags carry over.
+            restored = SerbianCyrillic.fromLatin(restoredLatin)
+            segments = segments.map { Segment(text: SerbianCyrillic.fromLatin($0.text), changed: $0.changed) }
+        }
         return Outcome(restored: restored, usedLanguage: resolved, ambiguous: ambiguous,
                        segments: segments, changedWords: changed)
     }

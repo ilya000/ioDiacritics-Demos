@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var input: String = "Drzava takodje moze. Zelim da naucim nasu pjesmu i da je procitam svaki dan."
     @State private var language: DemoLanguage = .auto
     @State private var justCopied = false
+    @State private var showAbout = false
 
     private var outcome: DemoEngine.Outcome {
         DemoEngine.restore(input, language: language)
@@ -24,6 +25,7 @@ struct ContentView: View {
             footer
         }
         .frame(minWidth: 720, minHeight: 440)
+        .sheet(isPresented: $showAbout) { AboutView() }
     }
 
     // MARK: Controls
@@ -50,7 +52,15 @@ struct ContentView: View {
                 }
             }
             .labelsHidden()
-            .frame(width: 150)
+            .frame(width: 160)
+
+            Button {
+                showAbout = true
+            } label: {
+                Image(systemName: "info.circle")
+            }
+            .buttonStyle(.borderless)
+            .help("About ioDiacritics Demo")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)

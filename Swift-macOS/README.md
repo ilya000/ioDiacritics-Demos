@@ -26,6 +26,12 @@ nasa drzava            ->   naša država
   varieties — when the signals tie, the badge says **"Serbo-Croatian (BCS)"** rather than
   guessing a variety. Use the dropdown to force one.
 - **Change highlighting** — a word-level diff marks exactly which words were fixed.
+- **Serbian (Cyrillic) output** — a language option that restores with the Serbian pack and then
+  transliterates the result to Cyrillic (`Drzava takodje moze.` → `Држава такође може.`).
+  Highlighting still reflects the diacritic fixes, not the script change. Transliteration lives
+  in [`Transliteration.swift`](Sources/DiacriticsDemo/Transliteration.swift).
+- **About panel** — the ⓘ button opens an About sheet with what the app is for, author, MIT
+  license, the linked GitHub repos, and the compiled-against `ioDiacritics` version.
 - **Reliability passport** — the footer shows the live `LangStats.summary` for the pack that ran.
 
 ## Run it
@@ -36,7 +42,8 @@ nasa drzava            ->   naša država
 swift run         # plain SwiftPM run
 ```
 
-`./build_app.sh` alone just produces `dist/ioDiacriticsDemo.app`.
+`./build_app.sh` alone just produces `dist/ioDiacriticsDemo.app`. From the repository root you
+can also use `../run-swift-macos.command` / `../build-swift-macos.command`.
 
 ## Layout
 

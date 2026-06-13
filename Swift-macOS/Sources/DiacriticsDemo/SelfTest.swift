@@ -50,6 +50,15 @@ enum DemoSelfTest {
         let am = DemoEngine.restore("Drzava takodje moze.", language: .auto)
         check("ambiguous restores correctly", am.restored == "Država takođe može.", am.restored)
 
+        // 7. Serbian Cyrillic: restore + transliterate to Cyrillic; "fixed" count is the
+        //    diacritic edits (computed in Latin), not the script change.
+        let cyr = DemoEngine.restore("Drzava takodje moze.", language: .serbianCyrillic)
+        check("serbian cyrillic restore", cyr.restored == "Држава такође може.", cyr.restored)
+        check("cyrillic fixed-count is diacritics", cyr.changedWords == 3, "\(cyr.changedWords) changed")
+        // Digraph + standalone transliteration sanity.
+        check("cyrillic digraphs", SerbianCyrillic.fromLatin("Ljubav njegova džak ĐAK") == "Љубав његова џак ЂАК",
+              SerbianCyrillic.fromLatin("Ljubav njegova džak ĐAK"))
+
         print(failures == 0 ? "\nALL PASSED" : "\n\(failures) FAILURE(S)")
         if failures > 0 { exit(1) }
     }
