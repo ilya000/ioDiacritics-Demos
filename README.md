@@ -1,22 +1,33 @@
 # ioDiacritics Demos
 
-Showcase apps for the [`ioDiacritics`](../ioDiacritics) library — restore stripped
-Bosnian / Croatian / Serbian Latin diacritics (`č ć š ž đ`) in **ošišana** text:
+Showcase apps for the [`ioDiacritics`](https://github.com/ilya000/ioDiacritics) library —
+restore stripped Bosnian / Croatian / Serbian Latin diacritics (`č ć š ž đ`) in **ošišana**
+text:
 
 ```
 Drzava takodje moze.   ->   Država takođe može.
 nasa drzava            ->   naša država
 ```
 
-Each demo lives in its own subfolder, named **`Language-Platform(s)`**, and is a complete,
-self-contained project. They share the same idea — paste/type ošišana text, restore it,
-highlight what changed, copy with one button, auto-detect or pick the language — but target
-different stacks so you can see the library working natively on each.
+![ioDiacritics Swift macOS demo restoring stripped text](docs/assets/macos-demo.png)
 
-| Folder | Language | Platforms | UI stack |
-|---|---|---|---|
-| [`Swift-macOS`](Swift-macOS) | Swift | macOS | SwiftUI (native window) |
-| [`Cpp-Windows-macOS-Linux`](Cpp-Windows-macOS-Linux) | C++17 | Windows, macOS, Linux | Dear ImGui + GLFW + OpenGL3 |
+Each demo lives in its own subfolder, named **`Language-Platform(s)`**, and is a complete,
+self-contained project. They share the same idea: paste/type ošišana text, restore it,
+highlight what changed, copy with one button, auto-detect or pick the language.
+
+## Demo Versions
+
+| Demo version | Language / binding | Platforms | UI stack | Source |
+|---|---|---|---|---|
+| Swift desktop demo | Swift / SwiftPM | macOS | SwiftUI native window | [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS) |
+| C++ cross-platform demo | C++17 / CMake | Windows, macOS, Linux | Dear ImGui + GLFW + OpenGL3 | [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux) |
+
+Repository links:
+
+- Main library: [`ilya000/ioDiacritics`](https://github.com/ilya000/ioDiacritics)
+- All demos: [`ilya000/ioDiacritics-Demos`](https://github.com/ilya000/ioDiacritics-Demos)
+- Swift/macOS demo: [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS)
+- C++ Windows/macOS/Linux demo: [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux)
 
 Both link the **same** library — the Swift demo via SwiftPM, the C++ demo via the library's
 own C++17 port — so the engine, dictionaries, and quality numbers are identical. Both load the
