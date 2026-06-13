@@ -39,3 +39,12 @@ The demos depend on the `ioDiacritics` library checked out next to this folder
 Create a new `Language-Platform(s)` subfolder (e.g. `Kotlin-Android`, `Rust-CrossPlatform`,
 `TypeScript-Web`), depend on the appropriate binding/port of `ioDiacritics`, and add a row to
 the table above.
+
+## License
+
+Demo source code is licensed under the **MIT License** — see [LICENSE](LICENSE).
+
+The demos themselves bundle no dictionaries and vendor no libraries. Anything you
+**distribute** (a built `.app` or binary) additionally includes the ioDiacritics dictionaries
+(separate data provenance) and, for the C++ demo, Dear ImGui (MIT), GLFW (zlib/libpng) and the
+Roboto font (Apache-2.0). See [NOTICE.md](NOTICE.md) before shipping a public binary.
