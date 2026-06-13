@@ -20,5 +20,27 @@ struct DiacriticsDemoApp: App {
             ContentView()
         }
         .windowResizability(.contentMinSize)
+        .commands {
+            // Route the standard macOS "About <App>" menu item to our detailed About window
+            // instead of the bare system panel.
+            CommandGroup(replacing: .appInfo) {
+                AboutMenuButton()
+            }
+        }
+
+        // The detailed About, as its own single window — opened from the app menu, the ⓘ
+        // button, and the footer link.
+        Window("About ioDiacritics Demo", id: AboutView.windowID) {
+            AboutView()
+        }
+        .windowResizability(.contentSize)
+    }
+}
+
+/// Menu item that opens the About window (lives in a View so it can read `openWindow`).
+private struct AboutMenuButton: View {
+    @Environment(\.openWindow) private var openWindow
+    var body: some View {
+        Button("About ioDiacritics Demo") { openWindow(id: AboutView.windowID) }
     }
 }

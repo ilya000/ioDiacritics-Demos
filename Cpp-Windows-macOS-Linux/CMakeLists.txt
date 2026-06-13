@@ -40,6 +40,15 @@ FetchContent_MakeAvailable(imgui)
 set(IODIACRITICS_CPP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../ioDiacritics/cpp iodiacritics_cpp_build)
 
+# Pull the library version out of its CMakeLists so the About panel can show it without
+# hardcoding (the C++ port exposes no runtime version constant). Falls back if not found.
+set(IODIA_LIB_VERSION "unknown")
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../../ioDiacritics/cpp/CMakeLists.txt" _iodia_cml)
+string(REGEX MATCH "project\\(ioDiacriticsCpp[ \t\r\n]+VERSION[ \t]+([0-9]+\\.[0-9]+\\.[0-9]+)" _m "${_iodia_cml}")
+if(CMAKE_MATCH_1)
+    set(IODIA_LIB_VERSION "${CMAKE_MATCH_1}")
+endif()
+
 # --- OpenGL ------------------------------------------------------------------------------
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
@@ -69,6 +78,8 @@ target_link_libraries(iodiacritics_demo PRIVATE glfw OpenGL::GL ioDiacritics::cp
 target_compile_definitions(iodiacritics_demo PRIVATE
     IODIACRITICS_REPO_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/../../ioDiacritics"
     IMGUI_FONT_DIR="${imgui_SOURCE_DIR}/misc/fonts"
+    IODIACRITICS_LIB_VERSION="${IODIA_LIB_VERSION}"
+    IODIACRITICS_DEMO_VERSION="${PROJECT_VERSION}"
 )
 if(APPLE)
     target_compile_definitions(iodiacritics_demo PRIVATE GL_SILENCE_DEPRECATION)

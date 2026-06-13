@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var input: String = "Drzava takodje moze. Zelim da naucim nasu pjesmu i da je procitam svaki dan."
     @State private var language: DemoLanguage = .auto
     @State private var justCopied = false
-    @State private var showAbout = false
+    @Environment(\.openWindow) private var openWindow
 
     private var outcome: DemoEngine.Outcome {
         DemoEngine.restore(input, language: language)
@@ -25,7 +25,6 @@ struct ContentView: View {
             footer
         }
         .frame(minWidth: 720, minHeight: 440)
-        .sheet(isPresented: $showAbout) { AboutView() }
     }
 
     // MARK: Controls
@@ -55,7 +54,7 @@ struct ContentView: View {
             .frame(width: 160)
 
             Button {
-                showAbout = true
+                openWindow(id: AboutView.windowID)
             } label: {
                 Image(systemName: "info.circle")
             }
@@ -147,17 +146,20 @@ struct ContentView: View {
     // MARK: Footer
 
     private var footer: some View {
+        // Kept deliberately minimal — all the detail (language stats, license, versions, links)
+        // lives in the About panel (ⓘ).
         HStack {
-            if let summary = outcome.usedLanguage.statsSummary {
-                Text(summary)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-            }
-            Spacer()
-            Text("ioDiacritics v\(IODiacritics.version)")
+            Text("Offline · no AI")
                 .font(.caption2)
                 .foregroundColor(.secondary)
+            Spacer()
+            Button {
+                openWindow(id: AboutView.windowID)
+            } label: {
+                Text("About & language stats")
+                    .font(.caption2)
+            }
+            .buttonStyle(.link)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)

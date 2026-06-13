@@ -327,6 +327,122 @@ static void glfwErrorCallback(int error, const char* desc) {
     std::fprintf(stderr, "GLFW error %d: %s\n", error, desc);
 }
 
+// Open a URL in the user's default browser (best-effort, per OS).
+static void openURL(const char* url) {
+#if defined(_WIN32)
+    std::string cmd = std::string("start \"\" \"") + url + "\"";
+#elif defined(__APPLE__)
+    std::string cmd = std::string("open \"") + url + "\"";
+#else
+    std::string cmd = std::string("xdg-open \"") + url + "\" >/dev/null 2>&1 &";
+#endif
+    (void)std::system(cmd.c_str());
+}
+
+#ifndef IODIACRITICS_LIB_VERSION
+#define IODIACRITICS_LIB_VERSION "unknown"
+#endif
+#ifndef IODIACRITICS_DEMO_VERSION
+#define IODIACRITICS_DEMO_VERSION "0.1.0"
+#endif
+
+// Thousands-grouped integer, e.g. 156931 -> "156,931".
+static std::string grouped(int n) {
+    std::string s = std::to_string(n), out;
+    int c = 0;
+    for (auto it = s.rbegin(); it != s.rend(); ++it) {
+        if (c && c % 3 == 0) out.push_back(',');
+        out.push_back(*it);
+        ++c;
+    }
+    return std::string(out.rbegin(), out.rend());
+}
+static std::string pctOpt(const std::optional<double>& v) {
+    if (!v) return "-";
+    // A measured 100% just means "no wrong edits in this finite sample" — not a guarantee, so
+    // report it as ~100% rather than a bare 100.0% (avoids an overclaim).
+    if (*v >= 0.9995) return "~100%";
+    char buf[16];
+    std::snprintf(buf, sizeof(buf), "%.1f%%", *v * 100.0);
+    return buf;
+}
+
+// Detailed About popup: what the app is, a real explanation of the ioDiacritics library, live
+// per-language statistics, versions, author, license, and repository links.
+static void drawAboutPopup(const Engine& e) {
+    ImGui::SetNextWindowSize(ImVec2(560, 0), ImGuiCond_Appearing);
+    if (!ImGui::BeginPopupModal("About ioDiacritics Demo", nullptr, ImGuiWindowFlags_NoResize))
+        return;
+
+    ImGui::TextUnformatted("ioDiacritics Demo");
+    ImGui::TextDisabled("Restore Bosnian / Croatian / Serbian diacritics — C++ / Dear ImGui");
+    ImGui::TextDisabled("App v%s  ·  engine ioDiacritics v%s", IODIACRITICS_DEMO_VERSION, IODIACRITICS_LIB_VERSION);
+    ImGui::Separator();
+
+    ImGui::PushTextWrapPos(540.0f);
+    ImGui::TextWrapped(
+        "What it does: paste osisana text — Bosnian, Croatian or Serbian written without its "
+        "diacritics (c c s z d), the way it comes out on a plain keyboard — and the app desisava "
+        "it: restores the missing marks, highlights every changed word, and copies the result "
+        "with one button. Pick a language or let it auto-detect.");
+    ImGui::Spacing();
+    ImGui::TextWrapped(
+        "About the library: the restoration is done by ioDiacritics, a small, offline, AI-free "
+        "engine for the Serbo-Croatian / BCS macrolanguage (ISO 639-3 hbs). It is deterministic: "
+        "a reverse-index dictionary from a stripped surface form to its valid accented "
+        "candidates, plus conservative guards (the dz digraph, the d-bar <-> dj/d conventions, a "
+        "numeric guard for words like 'sto' = 100). It is precision-first: when a word is "
+        "ambiguous it is left untouched rather than risk a wrong edit. Everything runs locally — "
+        "no network, no ML model, nothing leaves the device. Bosnian, Croatian and Serbian are "
+        "parallel first-tier packs, which is why the app reports 'Serbo-Croatian (BCS)' when the "
+        "text can't be told apart between varieties.");
+    ImGui::PopTextWrapPos();
+
+    // Language statistics — live reliability passports from each loaded pack.
+    ImGui::Spacing();
+    ImGui::TextUnformatted("Language statistics");
+    if (ImGui::BeginTable("langstats", 4,
+            ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_SizingStretchProp)) {
+        ImGui::TableSetupColumn("Language");
+        ImGui::TableSetupColumn("Dictionary");
+        ImGui::TableSetupColumn("Recall");
+        ImGui::TableSetupColumn("Edit precision");
+        ImGui::TableHeadersRow();
+        auto row = [](const char* name, const Pack* p) {
+            if (!p->loaded) return;
+            const LangStats& s = p->stats;
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn(); ImGui::TextUnformatted(name);
+            ImGui::TableNextColumn(); ImGui::Text("%s words", grouped(s.dict_keys).c_str());
+            ImGui::TableNextColumn(); ImGui::TextUnformatted(pctOpt(s.recall).c_str());
+            ImGui::TableNextColumn(); ImGui::TextUnformatted(pctOpt(s.edit_precision()).c_str());
+        };
+        row("Bosnian", &e.bs);
+        row("Croatian", &e.hr);
+        row("Serbian", &e.sr);
+        ImGui::EndTable();
+    }
+    ImGui::TextDisabled("Recall = strippable words restored; edit precision = of the edits made, how many are right.");
+    ImGui::TextDisabled("Measured on finite samples, so ~100%% means no wrong edits were seen — not a guarantee.");
+
+    ImGui::Separator();
+    ImGui::Text("Author:  iLya Os (Ilya V. Osipov)");
+    ImGui::SameLine();
+    if (ImGui::SmallButton("github.com/ilya000")) openURL("https://github.com/ilya000");
+    ImGui::TextWrapped("License: MIT for the demo source. Bundled dictionary data has its own "
+                       "provenance — see the repository's NOTICE.");
+    ImGui::Text("Engine:  ioDiacritics C++17 port (linked from the sibling library checkout).");
+
+    ImGui::Separator();
+    if (ImGui::Button("Library on GitHub")) openURL("https://github.com/ilya000/ioDiacritics");
+    ImGui::SameLine();
+    if (ImGui::Button("This demo on GitHub")) openURL("https://github.com/ilya000/ioDiacritics-Demos");
+    ImGui::SameLine();
+    if (ImGui::Button("Close", ImVec2(90, 0))) ImGui::CloseCurrentPopup();
+
+    ImGui::EndPopup();
+}
+
 // Headless verification of the engine (restore / detect / diff) — no window. Mirrors the
 // Swift demo's self-test. Run with `iodiacritics_demo --selftest`.
 static int runSelfTest(const Engine& e) {
@@ -485,6 +601,9 @@ int main(int argc, char** argv) {
         ImGui::TextUnformatted("ioDiacritics");
         ImGui::SameLine();
         ImGui::TextDisabled("— restore č ć š ž đ in Bosnian / Croatian / Serbian");
+        ImGui::SameLine(ImGui::GetContentRegionAvail().x - 64);
+        if (ImGui::Button("About")) ImGui::OpenPopup("About ioDiacritics Demo");
+        drawAboutPopup(engine);
 
         // controls
         ImGui::SetNextItemWidth(170);
@@ -545,13 +664,12 @@ int main(int argc, char** argv) {
         }
         ImGui::EndChild();
 
-        // footer: reliability passport for the pack that ran + library version
-        const Pack* used = engine.pack(outcome.used);
-        if (used && used->loaded) {
-            ImGui::TextDisabled("%s", used->stats.summary().c_str());
-        } else {
-            ImGui::TextDisabled(" ");
-        }
+        // footer: deliberately minimal — all detail (language stats, license, versions, links)
+        // lives in the About panel.
+        ImGui::TextDisabled("Offline · no AI");
+        ImGui::SameLine(ImGui::GetContentRegionAvail().x - 150);
+        if (ImGui::SmallButton("About & language stats"))
+            ImGui::OpenPopup("About ioDiacritics Demo");
 
         ImGui::End();
 
