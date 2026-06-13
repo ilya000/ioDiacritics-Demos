@@ -4,4 +4,9 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 ./build_app.sh
-open "dist/ioDiacriticsDemo.app"
+# `open` on an already-running app re-activates the old instance instead of loading the new
+# binary — quit any running copy first.
+osascript -e 'tell application "ioDiacriticsDemo" to quit' 2>/dev/null || true
+pkill -x ioDiacriticsDemo 2>/dev/null || true
+sleep 0.6
+open -n "dist/ioDiacriticsDemo.app"
