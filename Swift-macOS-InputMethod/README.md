@@ -55,7 +55,19 @@ from the menu bar input-source menu.
 ## Notes
 
 - Secure password fields and some protected contexts may bypass custom input methods.
-- For public distribution, sign and notarize the `.app` bundle before packaging.
+- For public distribution, sign and notarize the `.app` bundle before packaging, then attach
+  the signed `.dmg` or `.zip` to a GitHub Release.
 - The bundle is intended for `~/Library/Input Methods/` or `/Library/Input Methods/`, not
   `/Applications`.
 
+## Production direction
+
+This Swift project is the fastest way to validate the Input Method Kit bundle, installation
+flow, and live-keyboard behavior. The production-grade input source is planned as a thin
+Objective-C++ wrapper over the shared C++ `ioDiacritics` core:
+
+- Objective-C++ handles `IMKServer`, `IMKInputController`, candidate UI, signing, and the
+  macOS runtime details;
+- C++ keeps the portable restoration engine shared with Windows, Linux, and future platforms;
+- ambiguous words can later open candidates while precision-first automatic restoration remains
+  the default for confident cases.

@@ -21,6 +21,10 @@ Open the DMG, drag **ioDiacritics Demo** into Applications, launch it. It's sign
 Developer ID and notarized by Apple, so it opens on any Mac with no Gatekeeper warnings — just
 double-click. The cross-platform C++ build is built from source (see below).
 
+Signed and notarized application bundles belong on **GitHub Releases** as downloadable assets,
+not in the normal git history. The repository keeps source code, scripts, README files, and
+licenses; release assets keep the ready-to-run `.dmg`, `.zip`, or notarized `.app` packages.
+
 Each demo lives in its own subfolder, named **`Language-Platform(s)`**, and is a complete,
 self-contained project. They share the same engine and dictionaries, but demonstrate different
 product shapes: a windowed desktop app, a cross-platform C++ app, and a real macOS input source.
@@ -32,6 +36,10 @@ product shapes: a windowed desktop app, a cross-platform C++ app, and a real mac
 | Swift desktop demo | Swift / SwiftPM | macOS | SwiftUI native window | [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS) |
 | Swift input-method demo | Swift / Input Method Kit | macOS | System input source / keyboard layout | [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod) |
 | C++ cross-platform demo | C++17 / CMake | Windows, macOS, Linux | Dear ImGui + GLFW + OpenGL3 | [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux) |
+
+The input-method demo is intentionally a Swift MVP. The production direction is an
+Objective-C++ IMK wrapper around the shared C++ core: native macOS Input Method Kit integration
+outside, one portable restoration engine inside.
 
 Repository links:
 
