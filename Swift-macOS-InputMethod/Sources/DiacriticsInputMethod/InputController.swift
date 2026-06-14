@@ -17,10 +17,20 @@ final class InputController: IMKInputController {
     private var currentCandidates: [String] = []
     private var highlighted: String?
 
-    private static let serbian = Serbian.makeRestorer(loadInvariant: false)
-    private static let croatian = Croatian.makeRestorer(loadInvariant: false)
-    private static let bosnian = Bosnian.makeRestorer(loadInvariant: false)
+    // Load dictionaries straight from the app bundle via Bundle.main + the public Restorer.load,
+    // NOT via makeRestorer/Bundle.module: the SwiftPM resource bundles ship without an Info.plist
+    // and Bundle.module can fatalError under LaunchServices / app translocation. Live-keyboard
+    // semantics → loadInvariant: false (lighter).
+    private static let serbian = loadPack("deshishana_sr", Serbian.profile)
+    private static let croatian = loadPack("deshishana_hr", Croatian.profile)
+    private static let bosnian = loadPack("deshishana_bs", Bosnian.profile)
     private static var restorers: [Restorer?] { [serbian, croatian, bosnian] }
+
+    private static func loadPack(_ name: String, _ profile: LanguageProfile) -> Restorer? {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
+              let data = try? Data(contentsOf: url) else { return nil }
+        return Restorer.load(jsonData: data, profile: profile, loadInvariant: false)
+    }
 
     private var candidatesWindow: IMKCandidates? { AppDelegate.shared?.candidates }
     private var notFound: NSRange { NSRange(location: NSNotFound, length: NSNotFound) }
