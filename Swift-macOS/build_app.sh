@@ -24,17 +24,20 @@ rm -rf "${APP}"
 mkdir -p "${APP}/Contents/MacOS" "${APP}/Contents/Resources"
 cp "${BIN}" "${APP}/Contents/MacOS/ioDiacriticsDemo"
 
-# The diacritics dictionaries live in the shared ioDiacritics package; its per-language data
-# targets bundle deshishana_*.json via Bundle.module, so copy those resource bundles in.
-copied_bundles=0
+# The diacritics dictionaries live in the shared ioDiacritics package. The app loads them
+# DIRECTLY from Contents/Resources via Bundle.main (see DemoPacks), NOT via Bundle.module — the
+# SwiftPM resource bundles ship without an Info.plist and Bundle.module can fatalError under
+# LaunchServices / Gatekeeper translocation. So copy the bare deshishana_*.json in flat.
+copied_dicts=0
 for b in "${PRODUCTS}"/ioDiacritics_*.bundle; do
     if [ -d "${b}" ]; then
-        cp -R "${b}" "${APP}/Contents/Resources/"
-        copied_bundles=$((copied_bundles + 1))
+        for j in "${b}"/*.json; do
+            [ -f "${j}" ] && cp "${j}" "${APP}/Contents/Resources/" && copied_dicts=$((copied_dicts + 1))
+        done
     fi
 done
-if [ "${copied_bundles}" -eq 0 ]; then
-    echo "ERROR: no ioDiacritics resource bundles found in ${PRODUCTS}" >&2
+if [ "${copied_dicts}" -eq 0 ]; then
+    echo "ERROR: no deshishana_*.json dictionaries found in ${PRODUCTS}" >&2
     exit 1
 fi
 

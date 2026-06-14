@@ -68,10 +68,23 @@ enum DemoLanguage: String, CaseIterable, Identifiable {
 
 /// Full-quality restorers loaded once with the invariant word set materialised. Heavier in RAM
 /// than `Bosnian.shared` & co., but that is the explicit trade for this demo.
+///
+/// The dictionaries are loaded **directly from the app bundle** (`Bundle.main`) via the public
+/// `Restorer.load`, NOT via the library's `makeRestorer` / `Bundle.module`. In a hand-assembled
+/// `.app`, the SwiftPM resource bundles (`ioDiacritics_*.bundle`, which ship without an
+/// `Info.plist`) can be rejected by `Bundle(url:)` under LaunchServices / Gatekeeper app
+/// translocation — and `Bundle.module` then `fatalError`s. Loading the bare JSON we copy into
+/// `Contents/Resources` sidesteps that entirely (worst case: a nil restorer, handled gracefully).
 enum DemoPacks {
-    static let bosnian: Restorer?  = Bosnian.makeRestorer(loadInvariant: true)
-    static let croatian: Restorer? = Croatian.makeRestorer(loadInvariant: true)
-    static let serbian: Restorer?  = Serbian.makeRestorer(loadInvariant: true)
+    static let bosnian: Restorer?  = load("deshishana_bs", Bosnian.profile)
+    static let croatian: Restorer? = load("deshishana_hr", Croatian.profile)
+    static let serbian: Restorer?  = load("deshishana_sr", Serbian.profile)
+
+    private static func load(_ name: String, _ profile: LanguageProfile) -> Restorer? {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
+              let data = try? Data(contentsOf: url) else { return nil }
+        return Restorer.load(jsonData: data, profile: profile, loadInvariant: true)
+    }
 }
 
 /// Stateless restoration + detection + diff helpers built on top of `ioDiacritics`.
