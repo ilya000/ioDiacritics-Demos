@@ -14,17 +14,25 @@ VERSION="0.1.0"
 echo "==> swift build (${CONFIG})..."
 swift build -c "${CONFIG}" --build-path "${BUILD_PATH}"
 
-BIN="${BUILD_PATH}/${CONFIG}/DiacriticsInputMethod"
-PRODUCTS="${BUILD_PATH}/${CONFIG}"
+PRODUCTS="$(swift build -c "${CONFIG}" --build-path "${BUILD_PATH}" --show-bin-path)"
+BIN="${PRODUCTS}/DiacriticsInputMethod"
 
 echo "==> assembling ${APP} ..."
 rm -rf "${APP}"
 mkdir -p "${APP}/Contents/MacOS" "${APP}/Contents/Resources"
 cp "${BIN}" "${APP}/Contents/MacOS/DiacriticsInputMethod"
 
+copied_bundles=0
 for b in "${PRODUCTS}"/ioDiacritics_*.bundle; do
-    [ -d "${b}" ] && cp -R "${b}" "${APP}/Contents/Resources/"
+    if [ -d "${b}" ]; then
+        cp -R "${b}" "${APP}/Contents/Resources/"
+        copied_bundles=$((copied_bundles + 1))
+    fi
 done
+if [ "${copied_bundles}" -eq 0 ]; then
+    echo "ERROR: no ioDiacritics resource bundles found in ${PRODUCTS}" >&2
+    exit 1
+fi
 
 if [ -f ../Swift-macOS/AppIcon.icns ]; then
     cp ../Swift-macOS/AppIcon.icns "${APP}/Contents/Resources/AppIcon.icns"
@@ -76,4 +84,3 @@ echo "==> codesign ad-hoc"
 codesign --force --deep --sign - "${APP}" 2>/dev/null || codesign --force --sign - "${APP}"
 
 echo "OK: built ${APP}"
-

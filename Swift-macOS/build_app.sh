@@ -16,8 +16,8 @@ echo "${BUILD}" > .build_number
 echo "==> swift build (${CONFIG})... v${VERSION} (${BUILD})"
 swift build -c "${CONFIG}" --build-path "${BUILD_PATH}"
 
-BIN="${BUILD_PATH}/${CONFIG}/DiacriticsDemo"
-PRODUCTS="${BUILD_PATH}/${CONFIG}"
+PRODUCTS="$(swift build -c "${CONFIG}" --build-path "${BUILD_PATH}" --show-bin-path)"
+BIN="${PRODUCTS}/DiacriticsDemo"
 
 echo "==> assembling ${APP} ..."
 rm -rf "${APP}"
@@ -26,9 +26,17 @@ cp "${BIN}" "${APP}/Contents/MacOS/ioDiacriticsDemo"
 
 # The diacritics dictionaries live in the shared ioDiacritics package; its per-language data
 # targets bundle deshishana_*.json via Bundle.module, so copy those resource bundles in.
+copied_bundles=0
 for b in "${PRODUCTS}"/ioDiacritics_*.bundle; do
-    [ -d "${b}" ] && cp -R "${b}" "${APP}/Contents/Resources/"
+    if [ -d "${b}" ]; then
+        cp -R "${b}" "${APP}/Contents/Resources/"
+        copied_bundles=$((copied_bundles + 1))
+    fi
 done
+if [ "${copied_bundles}" -eq 0 ]; then
+    echo "ERROR: no ioDiacritics resource bundles found in ${PRODUCTS}" >&2
+    exit 1
+fi
 
 # App icon (regenerate with: swift tools/make_icon.swift && iconutil -c icns AppIcon.iconset -o AppIcon.icns)
 ICON_KEY=""
