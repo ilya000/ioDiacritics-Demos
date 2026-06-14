@@ -69,3 +69,5 @@ The demos themselves bundle no dictionaries and vendor no libraries. Anything yo
 **distribute** (a built `.app` or binary) additionally includes the ioDiacritics dictionaries
 (separate data provenance) and, for the C++ demo, Dear ImGui (MIT), GLFW (zlib/libpng) and the
 Roboto font (Apache-2.0). See [NOTICE.md](NOTICE.md) before shipping a public binary.
+
+The demo apps are provided **"as is", without warranties of any kind**, to the fullest extent permitted by applicable law. By downloading or using them you accept the [terms of use](https://ctrl8.com/legal.html). The signed, notarized macOS build is on the [releases page](https://github.com/ilya000/ioDiacritics-Demos/releases).
