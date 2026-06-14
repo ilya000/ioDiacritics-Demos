@@ -21,15 +21,19 @@ final class InputController: IMKInputController {
     // NOT via makeRestorer/Bundle.module: the SwiftPM resource bundles ship without an Info.plist
     // and Bundle.module can fatalError under LaunchServices / app translocation. Live-keyboard
     // semantics → loadInvariant: false (lighter).
-    private static let serbian = loadPack("deshishana_sr", Serbian.profile)
-    private static let croatian = loadPack("deshishana_hr", Croatian.profile)
-    private static let bosnian = loadPack("deshishana_bs", Bosnian.profile)
+    private static let serbian = loadPack("deshishana_sr", Serbian.profile) { Serbian.makeRestorer(loadInvariant: false) }
+    private static let croatian = loadPack("deshishana_hr", Croatian.profile) { Croatian.makeRestorer(loadInvariant: false) }
+    private static let bosnian = loadPack("deshishana_bs", Bosnian.profile) { Bosnian.makeRestorer(loadInvariant: false) }
     private static var restorers: [Restorer?] { [serbian, croatian, bosnian] }
 
-    private static func loadPack(_ name: String, _ profile: LanguageProfile) -> Restorer? {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
-              let data = try? Data(contentsOf: url) else { return nil }
-        return Restorer.load(jsonData: data, profile: profile, loadInvariant: false)
+    // Prefer bare JSON from Bundle.main (the assembled .app); fall back to the library's
+    // makeRestorer (Bundle.module) for `swift run`. The .app always hits the first path.
+    private static func loadPack(_ name: String, _ profile: LanguageProfile, _ fallback: () -> Restorer?) -> Restorer? {
+        if let url = Bundle.main.url(forResource: name, withExtension: "json"),
+           let data = try? Data(contentsOf: url) {
+            return Restorer.load(jsonData: data, profile: profile, loadInvariant: false)
+        }
+        return fallback()
     }
 
     private var candidatesWindow: IMKCandidates? { AppDelegate.shared?.candidates }

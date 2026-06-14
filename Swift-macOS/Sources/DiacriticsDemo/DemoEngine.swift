@@ -76,14 +76,20 @@ enum DemoLanguage: String, CaseIterable, Identifiable {
 /// translocation — and `Bundle.module` then `fatalError`s. Loading the bare JSON we copy into
 /// `Contents/Resources` sidesteps that entirely (worst case: a nil restorer, handled gracefully).
 enum DemoPacks {
-    static let bosnian: Restorer?  = load("deshishana_bs", Bosnian.profile)
-    static let croatian: Restorer? = load("deshishana_hr", Croatian.profile)
-    static let serbian: Restorer?  = load("deshishana_sr", Serbian.profile)
+    static let bosnian: Restorer?  = load("deshishana_bs", Bosnian.profile)  { Bosnian.makeRestorer(loadInvariant: true) }
+    static let croatian: Restorer? = load("deshishana_hr", Croatian.profile) { Croatian.makeRestorer(loadInvariant: true) }
+    static let serbian: Restorer?  = load("deshishana_sr", Serbian.profile)  { Serbian.makeRestorer(loadInvariant: true) }
 
-    private static func load(_ name: String, _ profile: LanguageProfile) -> Restorer? {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
-              let data = try? Data(contentsOf: url) else { return nil }
-        return Restorer.load(jsonData: data, profile: profile, loadInvariant: true)
+    /// Prefer the bare JSON in `Bundle.main` (the assembled `.app`); fall back to the library's
+    /// `makeRestorer` (Bundle.module) when there is no app bundle — e.g. `swift run` during dev,
+    /// where the resources live next to the SwiftPM binary instead. The `.app` always hits the
+    /// first path, so `Bundle.module` is never reached there (no fatalError risk).
+    private static func load(_ name: String, _ profile: LanguageProfile, _ fallback: () -> Restorer?) -> Restorer? {
+        if let url = Bundle.main.url(forResource: name, withExtension: "json"),
+           let data = try? Data(contentsOf: url) {
+            return Restorer.load(jsonData: data, profile: profile, loadInvariant: true)
+        }
+        return fallback()
     }
 }
 
