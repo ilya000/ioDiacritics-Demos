@@ -46,8 +46,8 @@ fi
 echo "==> signing with: ${SIGN_ID}"
 
 # 3. Sign the app with the hardened runtime + a secure timestamp (both required for notarization).
-codesign --force --options runtime --timestamp --sign "${SIGN_ID}" "${APP}"
-codesign --verify --strict --verbose=2 "${APP}"
+codesign --force --deep --options runtime --timestamp --sign "${SIGN_ID}" "${APP}"
+codesign --verify --deep --strict --verbose=2 "${APP}"
 
 # 4. Package a compressed DMG containing the app.
 echo "==> building ${DMG} ..."
