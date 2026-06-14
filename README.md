@@ -11,6 +11,16 @@ nasa drzava            ->   naša država
 
 ![ioDiacritics Swift macOS demo restoring stripped text](docs/assets/macos-demo.png)
 
+## Download & run (no build needed)
+
+Don't want to build it? Grab the ready-made **signed & notarized** macOS app:
+
+➡️ **[Download ioDiacriticsDemo.dmg](https://github.com/ilya000/ioDiacritics-Demos/releases/latest/download/ioDiacriticsDemo.dmg)** — ~5.8 MB, macOS 13+
+
+Open the DMG, drag **ioDiacritics Demo** into Applications, launch it. It's signed with a
+Developer ID and notarized by Apple, so it opens on any Mac with no Gatekeeper warnings — just
+double-click. The cross-platform C++ build is built from source (see below).
+
 Each demo lives in its own subfolder, named **`Language-Platform(s)`**, and is a complete,
 self-contained project. They share the same idea: paste/type ošišana text, restore it,
 highlight what changed, copy with one button, auto-detect or pick the language.

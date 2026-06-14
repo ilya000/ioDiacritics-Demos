@@ -16,6 +16,9 @@ struct AboutView: View {
     private let demoRepo   = URL(string: "https://github.com/ilya000/ioDiacritics-Demos")!
     private let libRepo    = URL(string: "https://github.com/ilya000/ioDiacritics")!
     private let authorPage = URL(string: "https://github.com/ilya000")!
+    /// The ctrl8 collection — every tool by iLya Os in one place. Shown at the
+    /// top of About so users of any app can discover the others.
+    private let website    = URL(string: "https://www.ctrl8.com")!
 
     // Live reliability passports straight from the bundled language packs.
     private var packs: [(name: String, stats: LangStats)] {
@@ -66,6 +69,13 @@ struct AboutView: View {
                 Text("App v\(appVersion) · engine ioDiacritics v\(IODiacritics.version)")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                HStack(spacing: 5) {
+                    Text("Part of")
+                        .foregroundColor(.secondary)
+                    Link("ctrl8 — www.ctrl8.com", destination: website)
+                }
+                .font(.callout)
+                .padding(.top, 2)
             }
         }
     }
