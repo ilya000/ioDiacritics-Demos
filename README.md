@@ -22,14 +22,15 @@ Developer ID and notarized by Apple, so it opens on any Mac with no Gatekeeper w
 double-click. The cross-platform C++ build is built from source (see below).
 
 Each demo lives in its own subfolder, named **`Language-Platform(s)`**, and is a complete,
-self-contained project. They share the same idea: paste/type ošišana text, restore it,
-highlight what changed, copy with one button, auto-detect or pick the language.
+self-contained project. They share the same engine and dictionaries, but demonstrate different
+product shapes: a windowed desktop app, a cross-platform C++ app, and a real macOS input source.
 
 ## Demo Versions
 
 | Demo version | Language / binding | Platforms | UI stack | Source |
 |---|---|---|---|---|
 | Swift desktop demo | Swift / SwiftPM | macOS | SwiftUI native window | [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS) |
+| Swift input-method demo | Swift / Input Method Kit | macOS | System input source / keyboard layout | [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod) |
 | C++ cross-platform demo | C++17 / CMake | Windows, macOS, Linux | Dear ImGui + GLFW + OpenGL3 | [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux) |
 
 Repository links:
@@ -37,18 +38,20 @@ Repository links:
 - Main library: [`ilya000/ioDiacritics`](https://github.com/ilya000/ioDiacritics)
 - All demos: [`ilya000/ioDiacritics-Demos`](https://github.com/ilya000/ioDiacritics-Demos)
 - Swift/macOS demo: [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS)
+- Swift/macOS input method: [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod)
 - C++ Windows/macOS/Linux demo: [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux)
 
-Both link the **same** library — the Swift demo via SwiftPM, the C++ demo via the library's
-own C++17 port — so the engine, dictionaries, and quality numbers are identical. Both load the
-full dictionaries (the invariant word set included) for maximum quality, and both report
-**"Serbo-Croatian (BCS)"** when the variety genuinely can't be told apart from the text.
+All demos link the **same** library — Swift demos via SwiftPM, the C++ demo via the library's
+own C++17 port — so the engine, dictionaries, and quality numbers are identical. The windowed
+demos load the full dictionaries (the invariant word set included) for maximum quality and
+honest BCS auto-detection; the input-method demo uses lightweight live-keyboard semantics.
 
 ## Repository layout
 
 ```
 ioDiacritics-Demos/
-├── Swift-macOS/                 # SwiftUI demo (swift build / build_app.sh)
+├── Swift-macOS/                 # SwiftUI windowed demo (swift build / build_app.sh)
+├── Swift-macOS-InputMethod/     # Input Method Kit demo installed as a macOS input source
 └── Cpp-Windows-macOS-Linux/     # Dear ImGui demo (CMake + FetchContent)
 ```
 
