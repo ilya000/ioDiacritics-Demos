@@ -37,6 +37,19 @@ product shapes: a windowed desktop app, a cross-platform C++ app, and a real mac
 | Swift input-method demo | Swift / Input Method Kit | macOS | System input source / keyboard layout | [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod) |
 | C++ cross-platform demo | C++17 / CMake | Windows, macOS, Linux | Dear ImGui + GLFW + OpenGL3 | [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux) |
 
+### ⌨️ Featured: ioDiacritics Šišana — type with diacritics, anywhere
+
+[`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod)
+turns the engine into a **macOS input method** — a system input source you select from the
+keyboard menu, just like a layout. Type bald Latin in **any** app and the diacritics appear as
+you go (`citaj` → `čitaj`): no window, no copy-paste, no Accessibility permission, fully offline.
+For genuinely ambiguous words it pops a **Chinese-style candidate list** — `casa` →
+**časa · čaša · ćasa** — so you pick the right reading with a number key, while confident words
+just restore themselves. The most natural way to write šišana Bosnian/Croatian/Serbian: keep
+typing the easy way, and your text comes out correct.
+
+> Code is here now; a **signed, notarized build** will be published as a release next.
+
 The input-method demo is intentionally a Swift MVP. The production direction is an
 Objective-C++ IMK wrapper around the shared C++ core: native macOS Input Method Kit integration
 outside, one portable restoration engine inside.
