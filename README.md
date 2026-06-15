@@ -78,6 +78,8 @@ Repository links:
 - Swift/macOS demo: [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS)
 - Swift/macOS input method: [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod)
 - C++ Windows/macOS/Linux demo: [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux)
+- Home page: [ctrl8.com/iodiacritics.html](https://ctrl8.com/iodiacritics.html)
+- Author: **iLya Os** (Ilya V. Osipov) — [github.com/ilya000](https://github.com/ilya000)
 
 All demos link the **same** library — Swift demos via SwiftPM, the C++ demo via the library's
 own C++17 port — so the engine, dictionaries, and quality numbers are identical. The windowed
