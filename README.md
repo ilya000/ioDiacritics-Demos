@@ -34,21 +34,36 @@ product shapes: a windowed desktop app, a cross-platform C++ app, and a real mac
 | Demo version | Language / binding | Platforms | UI stack | Source |
 |---|---|---|---|---|
 | Swift desktop demo | Swift / SwiftPM | macOS | SwiftUI native window | [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS) |
-| Swift input-method demo | Swift / Input Method Kit | macOS | System input source / keyboard layout | [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod) |
+| **Šišana** (input method / IME) | Swift / Input Method Kit | macOS | System input source with a candidate window | [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod) |
 | C++ cross-platform demo | C++17 / CMake | Windows, macOS, Linux | Dear ImGui + GLFW + OpenGL3 | [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux) |
 
-### ⌨️ Featured: ioDiacritics Šišana — type with diacritics, anywhere
+### ⌨️ Featured: Šišana — type with diacritics, anywhere
 
-[`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod)
-turns the engine into a **macOS input method** — a system input source you select from the
-keyboard menu, just like a layout. Type bald Latin in **any** app and the diacritics appear as
-you go (`citaj` → `čitaj`): no window, no copy-paste, no Accessibility permission, fully offline.
-For genuinely ambiguous words it pops a **Chinese-style candidate list** — `casa` →
-**časa · čaša · ćasa** — so you pick the right reading with a number key, while confident words
-just restore themselves. The most natural way to write šišana Bosnian/Croatian/Serbian: keep
-typing the easy way, and your text comes out correct.
+**Šišana** ([`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod))
+turns the engine into a **macOS input method** — a real system input source you pick from the
+keyboard menu, exactly like a layout. It is deeply **native to the OS**: it works in **every**
+app (Mail, Notes, browsers, chat, code editors), with **no window, no copy-paste, no
+Accessibility permission, fully offline**. Type bald Latin and the diacritics appear as you go
+(`citaj` → `čitaj`).
 
-> Code is here now; a **signed, notarized build** will be published as a release next.
+For genuinely ambiguous words it shows the **system candidate window — the same
+Chinese/Japanese-IME mechanism** — and offers the valid readings (`casa` →
+**časa · čaša · ćasa**); you pick one with a number key (`1`–`9`) or arrows + Return. Confident,
+unambiguous words never interrupt you. It is the most natural way to write šišana
+Bosnian/Croatian/Serbian: keep typing the easy way, and your text comes out correct — right
+where you are typing, in any application.
+
+**Download & install (macOS 13+, signed & notarized):**
+
+➡️ **[Download Šišana (Sisana-InputMethod.dmg)](https://github.com/ilya000/ioDiacritics-Demos/releases/latest/download/Sisana-InputMethod.dmg)** — ~5.9 MB
+
+1. Open the DMG and **drag `Šišana` into the `Input Methods` folder** (you may be asked for your
+   admin password).
+2. **System Settings → Keyboard → Input Sources → ＋**, add **Šišana**.
+3. Pick **Šišana** from the input-source menu in the menu bar and start typing.
+
+(Prefer to build it yourself? `cd Swift-macOS-InputMethod && ./install_user.sh` installs it for
+the current user.)
 
 The input-method demo is intentionally a Swift MVP. The production direction is an
 Objective-C++ IMK wrapper around the shared C++ core: native macOS Input Method Kit integration

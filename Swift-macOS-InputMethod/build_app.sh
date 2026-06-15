@@ -1,14 +1,15 @@
 #!/bin/bash
-# Build ioDiacritics Sisana.app -- a macOS Input Method Kit demo.
+# Build Šišana.app -- a macOS Input Method (IME) for ioDiacritics (Bosnian/Croatian/Serbian
+# diacritic restoration with a candidate window). Installs as a system input source.
 set -euo pipefail
 
 cd "$(dirname "$0")"
 
 BUILD_PATH="/tmp/ioDiacriticsInputMethod-build"
 CONFIG="release"
-APP="dist/ioDiacritics Šišana.app"
-BUNDLE_ID="com.ilyaosipov.iodiacritics.inputmethod"
-CONNECTION="IODiacriticsInputMethodConnection"
+APP="dist/Šišana.app"
+BUNDLE_ID="com.ilyaosipov.sisana"
+CONNECTION="SisanaInputMethodConnection"
 VERSION="0.1.0"
 
 echo "==> swift build (${CONFIG})..."
@@ -47,8 +48,8 @@ cat > "${APP}/Contents/Info.plist" <<PLIST
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>                 <string>ioDiacritics Šišana</string>
-    <key>CFBundleDisplayName</key>          <string>ioDiacritics Šišana</string>
+    <key>CFBundleName</key>                 <string>Šišana</string>
+    <key>CFBundleDisplayName</key>          <string>Šišana</string>
     <key>CFBundleIdentifier</key>           <string>${BUNDLE_ID}</string>
     <key>CFBundleExecutable</key>           <string>DiacriticsInputMethod</string>
     <key>CFBundleIconFile</key>             <string>AppIcon</string>
@@ -75,7 +76,7 @@ cat > "${APP}/Contents/Info.plist" <<PLIST
         <key>${BUNDLE_ID}.bcs</key>
         <dict>
             <key>tsInputModeLocalizedNameKey</key>
-            <string>ioDiacritics Šišana</string>
+            <string>Šišana</string>
             <key>tsInputModeScriptKey</key>
             <string>Latn</string>
         </dict>

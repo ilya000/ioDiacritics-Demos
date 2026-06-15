@@ -1,4 +1,4 @@
-# ioDiacritics Šišana — type with diacritics, anywhere
+# Šišana — type with diacritics, anywhere
 
 **Write šišana Bosnian/Croatian/Serbian the easy way and let your text come out correct.**
 
@@ -17,7 +17,7 @@ the input source is selected.
 
 ## Candidate readings — Chinese-IME style
 
-When a word is genuinely ambiguous, ioDiacritics Šišana pops the **system candidate window** —
+When a word is genuinely ambiguous, Šišana pops the **system candidate window** —
 the same UI Chinese/Japanese input methods use — and offers every valid reading:
 
 ```text
@@ -53,7 +53,7 @@ basic IMK bundle is stable.
 The script creates:
 
 ```text
-dist/ioDiacritics Šišana.app
+dist/Šišana.app
 ```
 
 ## Install for the current user
@@ -68,7 +68,7 @@ Then log out/in, or restart TextInputMenuAgent:
 killall TextInputMenuAgent
 ```
 
-Open **System Settings -> Keyboard -> Input Sources**, add **ioDiacritics Šišana**, and select it
+Open **System Settings -> Keyboard -> Input Sources**, add **Šišana**, and select it
 from the menu bar input-source menu.
 
 ## Notes

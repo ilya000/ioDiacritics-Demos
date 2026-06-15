@@ -8,11 +8,11 @@ cd "$(dirname "$0")"
 
 DEST="${HOME}/Library/Input Methods"
 mkdir -p "${DEST}"
-rm -rf "${DEST}/ioDiacritics Šišana.app"
-cp -R "dist/ioDiacritics Šišana.app" "${DEST}/"
+rm -rf "${DEST}/Šišana.app"
+cp -R "dist/Šišana.app" "${DEST}/"
 
-echo "Installed: ${DEST}/ioDiacritics Šišana.app"
+echo "Installed: ${DEST}/Šišana.app"
 echo "Restarting TextInputMenuAgent..."
 killall TextInputMenuAgent 2>/dev/null || true
-echo "Now add 'ioDiacritics Šišana' in System Settings -> Keyboard -> Input Sources."
+echo "Now add 'Šišana' in System Settings -> Keyboard -> Input Sources."
 
