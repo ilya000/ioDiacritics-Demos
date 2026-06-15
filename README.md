@@ -55,15 +55,17 @@ where you are typing, in any application.
 
 **Download & install (macOS 13+, signed & notarized):**
 
-➡️ **[Download Šišana (Sisana-InputMethod.dmg)](https://github.com/ilya000/ioDiacritics-Demos/releases/latest/download/Sisana-InputMethod.dmg)** — ~5.9 MB
+➡️ **[Download Šišana installer (Sisana-InputMethod.pkg)](https://github.com/ilya000/ioDiacritics-Demos/releases/latest/download/Sisana-InputMethod.pkg)** — ~4.8 MB
 
-1. Open the DMG and **drag `Šišana` into the `Input Methods` folder** (you may be asked for your
-   admin password).
-2. **System Settings → Keyboard → Input Sources → ＋**, add **Šišana**.
+1. Open the `.pkg` and follow the installer — it puts Šišana in the right place for you. Choose
+   **Install for all users of this computer** (asks for an admin password → installs to
+   `/Library/Input Methods`) or **Install for me only** (no admin → `~/Library/Input Methods`).
+2. **System Settings → Keyboard → Input Sources → ＋** — search **Šišana** (it's listed under
+   *Serbian (Latin)*) and add it.
 3. Pick **Šišana** from the input-source menu in the menu bar and start typing.
 
 (Prefer to build it yourself? `cd Swift-macOS-InputMethod && ./install_user.sh` installs it for
-the current user.)
+the current user, or `./make_pkg.sh` rebuilds the signed/notarized installer.)
 
 The input-method demo is intentionally a Swift MVP. The production direction is an
 Objective-C++ IMK wrapper around the shared C++ core: native macOS Input Method Kit integration

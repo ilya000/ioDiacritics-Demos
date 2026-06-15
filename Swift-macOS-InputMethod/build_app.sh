@@ -73,13 +73,28 @@ cat > "${APP}/Contents/Info.plist" <<PLIST
     <key>tsInputMethodIconFileKey</key>     <string>AppIcon.icns</string>
     <key>ComponentInputModeDict</key>
     <dict>
-        <key>${BUNDLE_ID}.bcs</key>
+        <key>tsInputModeListKey</key>
         <dict>
-            <key>tsInputModeLocalizedNameKey</key>
-            <string>Šišana</string>
-            <key>tsInputModeScriptKey</key>
-            <string>Latn</string>
+            <key>${BUNDLE_ID}.bcs</key>
+            <dict>
+                <key>TISInputSourceID</key>                     <string>${BUNDLE_ID}.bcs</string>
+                <key>TISIntendedLanguage</key>                  <string>sr-Latn</string>
+                <key>tsInputModeLocalizedNameKey</key>          <string>Šišana</string>
+                <key>tsInputModeCharacterRepertoireKey</key>
+                <array><string>Latn</string></array>
+                <key>tsInputModeScriptKey</key>                 <string>smRoman</string>
+                <key>tsInputModeIsVisibleKey</key>              <true/>
+                <key>tsInputModePrimaryInScriptKey</key>        <true/>
+                <key>tsInputModeKeyEquivalentKey</key>          <string></string>
+                <key>tsInputModeKeyEquivalentModifiersKey</key> <integer>0</integer>
+                <key>tsInputModeMenuIconFileKey</key>           <string>AppIcon.icns</string>
+                <key>tsInputModePaletteIconFileKey</key>        <string>AppIcon.icns</string>
+            </dict>
         </dict>
+        <key>tsVisibleInputModeOrderedArrayKey</key>
+        <array>
+            <string>${BUNDLE_ID}.bcs</string>
+        </array>
     </dict>
 </dict>
 </plist>
