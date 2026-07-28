@@ -11,6 +11,12 @@ nasa drzava            ->   naša država
 
 ![ioDiacritics Swift macOS demo restoring stripped text](docs/assets/macos-demo.png)
 
+> 🌐 **Try it online — no install:** restore Bosnian / Croatian / Serbian diacritics right in
+> your browser at **[polytype.app](https://polytype.app/)** —
+> [Serbian](https://polytype.app/serbian/) · [Croatian](https://polytype.app/croatian/) ·
+> [Bosnian](https://polytype.app/bosnian/) — plus keyboard-layout fixes and smart
+> transliteration for more languages.
+
 ## Download & run (no build needed)
 
 Don't want to build it? Grab the ready-made **signed & notarized** macOS app:
@@ -78,6 +84,7 @@ Repository links:
 - Swift/macOS demo: [`Swift-macOS`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS)
 - Swift/macOS input method: [`Swift-macOS-InputMethod`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Swift-macOS-InputMethod)
 - C++ Windows/macOS/Linux demo: [`Cpp-Windows-macOS-Linux`](https://github.com/ilya000/ioDiacritics-Demos/tree/main/Cpp-Windows-macOS-Linux)
+- Online web app (no install): [polytype.app](https://polytype.app/) — [sr](https://polytype.app/serbian/) / [hr](https://polytype.app/croatian/) / [bs](https://polytype.app/bosnian/) / [letter guides](https://polytype.app/letters/)
 - Home page: [ctrl8.com/iodiacritics.html](https://ctrl8.com/iodiacritics.html)
 - Author: **iLya Os** (Ilya V. Osipov) — [github.com/ilya000](https://github.com/ilya000)
 
